@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>GeoQuiz</title>
+	<style>
+		#map {
+			width: 500px;
+			height: 400px;
+			background-color: #CCC;
+		}
+
+		#cityname {
+			font-weight: bold;
+		}
+
+		#score {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<script>
+	function City(cityname, lat, lon) { //constructor
+		this.cityName = cityname;
+		this.cityLat = lat;
+		this.cityLon = lon;
+		//this.marker = undefined;
+		//will dynamically add .marker property later
+	}
+
+	//based on https://developers.google.com/maps/documentation/javascript/examples/event-closure
+
+	function initMap() {
+		var cities = [
+			new City("Minneapolis", 44.98, -93.27),
+			new City("Milwaukee", 43.05, -87.92),
+			new City("Madison", 43.07, -89.40),
+			new City("Chicago", 41.84, -87.68),
+			new City("Rochester", 44.02, -92.46),
+			new City("Duluth", 46.80, -92.10),
+			new City("Cedar Rapids", 41.98, -91.67),
+			new City("Green Bay", 44.5, -88.02),
+			new City("Eau Claire", 44.82, -91.50)
+		];
+
+		//TODO random shuffle this array
+
+		var correctCity = [
+			"Madison",
+			"Duluth",
+			"Green Bay"
+		];
+
+		//TODO code to randomly select one city from the current set of 3.
+
+		var mapDiv = document.getElementById('map');
+		// this was helpful: http://googlemaps.github.io/js-samples/styledmaps/wizard/index.html
+		var mapOptions = {
+			center: new google.maps.LatLng(44.5, -91),
+			zoom: 6,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
+			disableDefaultUI: true,
+			styles: [
+				{
+					"elementType": "labels.text",
+					"stylers": [
+						{"visibility": "off"}
+					]
+				},
+			]
+		};
+		var map = new google.maps.Map(mapDiv, mapOptions);
+
+		//TODO change loop structure to pop 3 cities off the list
+
+		//var markerOptions = [];
+		for (i = 0; i < cities.length; i++) {
+			for (j = 0; j < 3; j++) {
+				//lab = i.text;
+				cities[i].marker = new google.maps.Marker({
+					position: {
+						lat: cities[i].cityLat,
+						lng: cities[i].cityLon
+					},
+					map: map
+				});
+
+				cities[i].marker.addListener("click", function{
+					var correct = checkIfCorrect(cities[i].cityName);
+					//TODO make it wait for a click before proceeding
+					//TODO modify score tally
+					//TODO clear markers before continuing
+
+				});
+				//cities[i].marker = createMarker(cities[i].cityLat, cities[i].cityLon, cities[i], map, cities[i].cityName);
+
+				//test to see if function is parsing everything correctly
+				//attachAnswer(cities[i].marker, cities[i].cityName);
+			}
+		}
+
+	}
+
+	function checkIfCorrect(clickedCityName) {
+		// THIS IS THE THING THAT WAS DRIVING ME CRAZY
+		// Need to build a "closure" around this function
+		// Otherwise, there is a bewildering scope error and the code evaluates on all markers before you even click
+		//http://stackoverflow.com/questions/829353/google-maps-trouble-closures-passing-by-reference
+		return function () { //start closure
+			//TODO change function to allow parameter for city to check for
+			console.log("Checking if it\'s " + clickedCityName);
+			var outputArea = document.getElementById("feedback");
+			if (clickedCityName == "Madison") {
+				outputArea.innerHTML = "Correct! You clicked Madison."
+				return true;
+			} else {
+				outputArea.innerHTML = "Sorry! That is not Madison."
+				return false;
+			} //TODO cancel the listener at this point?
+		}; //end closure
+	}
+	//TODO display final score
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async
+        defer></script>
+<body>
+<h1>Geo quiz</h1>
+<div id="map"></div>
+<p id="question">Which city is <span id="cityname">Madison</span>?</p><!--TODO variable-->
+<p id="feedback"></p>
+<p id="score"></p>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mousemove</title>
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid #000000;">
+</canvas>
+</body>
+<script>
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	prevX = 0;
+	prevY = 0;
+	currX = 0;
+	currY = 0;
+
+
+
+	canvas.addEventListener("mousemove", mouseHasMoved);
+
+	function mouseHasMoved(evt) {
+		var X = event.pageX - canvas.offsetLeft;
+		var Y = event.pageY - canvas.offsetTop;
+		//console.log(X, Y);
+		ctx.beginPath();
+		ctx.arc(X,Y,1,0,2*Math.PI);
+		ctx.stroke();
+	}
+
+</script>
+</html>

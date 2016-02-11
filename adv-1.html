@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>GeoQuiz</title>
+	<style>
+		#map {
+			width: 500px;
+			height: 400px;
+			background-color: #CCC;
+		}
+
+		#cityname {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<script>
+	function City(cityname, lat, lon) { //constructor
+		this.cityName = cityname;
+		this.cityLat = lat;
+		this.cityLon = lon;
+		//this.marker = undefined;
+		//will dynamically add .marker property later
+	}
+
+	//based on https://developers.google.com/maps/documentation/javascript/examples/event-closure
+
+	function initMap() {
+		var cities = [
+			new City("Minneapolis", 44.98, -93.27),
+			new City("Milwaukee", 43.05, -87.92),
+			new City("Madison", 43.07, -89.40)
+		];
+
+		var mapDiv = document.getElementById('map');
+		var mapOptions = {
+			center: new google.maps.LatLng(44, -91),
+			zoom: 6
+		};
+		var map = new google.maps.Map(mapDiv, mapOptions);
+
+		var markerOptions = [];
+		for (i = 0; i < cities.length; i++) {
+			//lab = i.text;
+			cities[i].marker = new google.maps.Marker({
+				position: {
+					lat: cities[i].cityLat,
+					lng: cities[i].cityLon
+				},
+				map: map
+			});
+
+			cities[i].marker.addListener("click", checkIfCorrect(cities[i].cityName));
+			//cities[i].marker = createMarker(cities[i].cityLat, cities[i].cityLon, cities[i], map, cities[i].cityName);
+
+			//test to see if function is parsing everything correctly
+			//attachAnswer(cities[i].marker, cities[i].cityName);
+		}
+
+	}
+
+	function checkIfCorrect(clickedCityName) {
+		// THIS IS THE THING THAT WAS DRIVING ME CRAZY
+		// Need to build a "closure" around this function
+		// Otherwise, there is a bewildering scope error and the code evaluates on all markers before you even click
+		//http://stackoverflow.com/questions/829353/google-maps-trouble-closures-passing-by-reference
+		return function() { //start closure
+			console.log("Checking if it\'s " + clickedCityName);
+			var outputArea = document.getElementById("feedback");
+			if (clickedCityName == "Madison") {
+				outputArea.innerHTML = "Correct! You clicked Madison."
+			} else {
+				outputArea.innerHTML = "Sorry! That is not Madison."
+			}
+		}; //end closure
+	}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async
+        defer></script>
+<body>
+	<h1>Geo quiz</h1>
+	<div id="map"></div>
+	<p id="question">Which city is <span id="cityname">Madison</span>?</p>
+	<p id="feedback"></p>
+</body>
+</html>
