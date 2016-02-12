@@ -66,7 +66,7 @@
 					"stylers": [
 						{"visibility": "off"}
 					]
-				},
+				}
 			]
 		};
 		var map = new google.maps.Map(mapDiv, mapOptions);
@@ -85,8 +85,8 @@
 					map: map
 				});
 
-				cities[i].marker.addListener("click", function{
-					var correct = checkIfCorrect(cities[i].cityName);
+				cities[i].marker.addListener("click", function(){
+					checkIfCorrect(cities[i].cityName);
 					//TODO make it wait for a click before proceeding
 					//TODO modify score tally
 					//TODO clear markers before continuing
@@ -111,10 +111,10 @@
 			console.log("Checking if it\'s " + clickedCityName);
 			var outputArea = document.getElementById("feedback");
 			if (clickedCityName == "Madison") {
-				outputArea.innerHTML = "Correct! You clicked Madison."
+				outputArea.innerHTML = "Correct! You clicked Madison.";
 				return true;
 			} else {
-				outputArea.innerHTML = "Sorry! That is not Madison."
+				outputArea.innerHTML = "Sorry! That is not Madison.";
 				return false;
 			} //TODO cancel the listener at this point?
 		}; //end closure
@@ -126,7 +126,8 @@
 <body>
 <h1>Geo quiz</h1>
 <div id="map"></div>
-<p id="question">Which city is <span id="cityname">Madison</span>?</p><!--TODO variable-->
+<p id="question">Which city is <span id="cityname">Madison</span>?</p>
+<!--TODO variable-->
 <p id="feedback"></p>
 <p id="score"></p>
 </body>
