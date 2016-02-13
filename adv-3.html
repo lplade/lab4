@@ -78,15 +78,12 @@
 			correctCity = cities[a].answer;
 			cities[a].marker.addListener("click", function () {
 				checkIfCorrect(currentCity, correctCity);
-				//TODO make it wait for a click before proceeding
-				//TODO modify score tally
-				//TODO clear markers before continuing
 			});
 		}
 	}
 	function runARound(roundCities) {
 		//TODO show only the three markers for this round
-		//TODO catch listener for the click
+		//TODO wait for the click
 		//TODO increment score or not based on return of checkIfCorrect function
 	}
 
