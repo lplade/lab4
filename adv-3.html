@@ -133,16 +133,12 @@
 
 	//assign a "correct" answer to each object in the array.
 	//Makes passing correct answer sets easier.
-	var tmpAnswerIdx = 0;
-	for (var a = 0; a < cities.length; a++) {
-		console.log("Keying " + cities[a].cityName + " to...");
-		//Apparently, using an operator as a loop condition actually modifies the original variable?
-		//for (var b = tmpAnswerIdx; b < (tmpAnswerIdx + 3); b++) {
-		for (var b = 0; b < 3; b++) {
-			console.log("..." + cities[tmpAnswerIdx].cityName);
-			cities[a].answer = cities[tmpAnswerIdx].cityName;
+	for (var realCityIdx = 0; realCityIdx < cities.length; realCityIdx+=3) {
+		console.log("Answer = " + cities[realCityIdx].cityName);
+		for (var currCityIdx = realCityIdx; currCityIdx < realCityIdx +3; currCityIdx++) {
+			cities[currCityIdx].answer = cities[realCityIdx].cityName;
+			console.log("...associating with " + cities[currCityIdx].cityName);
 		}
-		tmpAnswerIdx =+ 3;
 	}
 
 
@@ -166,9 +162,9 @@
 	var gMarkers = [];
 	var score = 0;
 
-	score += runARound(round1Cities);
-	score += runARound(round2Cities);
-	score += runARound(round3Cities);
+	//score += runARound(round1Cities);
+	//score += runARound(round2Cities);
+	//score += runARound(round3Cities);
 
 
 	//TODO display final score
@@ -178,7 +174,7 @@
 <body>
 <h1>Geo quiz</h1>
 <div id="map"></div>
-<p id="question">Which city is <span id="cityname">Madison</span>?</p>
+<p id="question">Which city is <span id="cityname">ERROR</span>?</p>
 <!--TODO variable-->
 <p id="feedback"></p>
 <p id="score"></p>
