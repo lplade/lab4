@@ -24,35 +24,28 @@
 		this.cityName = cityname;
 		this.cityLat = lat;
 		this.cityLon = lon;
+		//this.correct = undefined;
 		//this.marker = undefined;
 		//will dynamically add .marker property later
 	}
 
+	//Fisher-Yates shuffle
+	//https://www.frankmitchell.org/2015/01/fisher-yates/
+	function shuffle (array) {
+		var i = 0;
+		var j = 0;
+		var temp = null;
+
+		for (i = array.length - 1; i > 0; i -= 1) {
+			j = Math.floor(Math.random() * (i + 1));
+			temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+	}
+
 	//based on https://developers.google.com/maps/documentation/javascript/examples/event-closure
-
 	function initMap() {
-		var cities = [
-			new City("Minneapolis", 44.98, -93.27),
-			new City("Milwaukee", 43.05, -87.92),
-			new City("Madison", 43.07, -89.40),
-			new City("Chicago", 41.84, -87.68),
-			new City("Rochester", 44.02, -92.46),
-			new City("Duluth", 46.80, -92.10),
-			new City("Cedar Rapids", 41.98, -91.67),
-			new City("Green Bay", 44.5, -88.02),
-			new City("Eau Claire", 44.82, -91.50)
-		];
-
-		//TODO random shuffle this array
-
-		var correctCity = [
-			"Madison",
-			"Duluth",
-			"Green Bay"
-		];
-
-		//TODO code to randomly select one city from the current set of 3.
-
 		var mapDiv = document.getElementById('map');
 		// this was helpful: http://googlemaps.github.io/js-samples/styledmaps/wizard/index.html
 		var mapOptions = {
@@ -69,48 +62,45 @@
 				}
 			]
 		};
+		//then create the map object
 		var map = new google.maps.Map(mapDiv, mapOptions);
 
-		//TODO change loop structure to pop 3 cities off the list
+		//set up the markers with eventlisteners
+		for (var mrk = 0; mrk < 9; mrk++) {
+			cities[mrk].marker = new google.maps.Marker({
+				position: {
+					lat: cities[mrk].cityLat,
+					lng: cities[mrk].cityLon
+				},
+				map: map
+			});
+			cities[mrk].marker.addListener("click", function () {
+				checkIfCorrect(cities[mrk].cityName, cities[0].cityName);
+				//TODO make it wait for a click before proceeding
+				//TODO modify score tally
+				//TODO clear markers before continuing
 
-		//var markerOptions = [];
-		for (i = 0; i < cities.length; i++) {
-			for (j = 0; j < 3; j++) {
-				//lab = i.text;
-				cities[i].marker = new google.maps.Marker({
-					position: {
-						lat: cities[i].cityLat,
-						lng: cities[i].cityLon
-					},
-					map: map
-				});
+			});
 
-				cities[i].marker.addListener("click", function(){
-					checkIfCorrect(cities[i].cityName);
-					//TODO make it wait for a click before proceeding
-					//TODO modify score tally
-					//TODO clear markers before continuing
-
-				});
-				//cities[i].marker = createMarker(cities[i].cityLat, cities[i].cityLon, cities[i], map, cities[i].cityName);
-
-				//test to see if function is parsing everything correctly
-				//attachAnswer(cities[i].marker, cities[i].cityName);
-			}
 		}
 
+	function runARound(roundCities){
+
+
+
+		}
 	}
 
-	function checkIfCorrect(clickedCityName) {
+
+	function checkIfCorrect(clickedCityName,correctCityName) {
 		// THIS IS THE THING THAT WAS DRIVING ME CRAZY
 		// Need to build a "closure" around this function
 		// Otherwise, there is a bewildering scope error and the code evaluates on all markers before you even click
 		//http://stackoverflow.com/questions/829353/google-maps-trouble-closures-passing-by-reference
 		return function () { //start closure
-			//TODO change function to allow parameter for city to check for
 			console.log("Checking if it\'s " + clickedCityName);
 			var outputArea = document.getElementById("feedback");
-			if (clickedCityName == "Madison") {
+			if (clickedCityName == correctCityName) {
 				outputArea.innerHTML = "Correct! You clicked Madison.";
 				return true;
 			} else {
@@ -119,6 +109,51 @@
 			} //TODO cancel the listener at this point?
 		}; //end closure
 	}
+
+	//MAIN SCRIPT STARTS HERE
+
+	//TODO geolocate coords from a city name
+	var cities = [
+		new City("Minneapolis", 44.98, -93.27),
+		new City("Milwaukee", 43.05, -87.92),
+		new City("Madison", 43.07, -89.40),
+		new City("Chicago", 41.84, -87.68),
+		new City("Rochester", 44.02, -92.46),
+		new City("Duluth", 46.80, -92.10),
+		new City("Cedar Rapids", 41.98, -91.67),
+		new City("Green Bay", 44.5, -88.02),
+		new City("Eau Claire", 44.82, -91.50)
+	];
+
+	//randomize this array for replayability
+	shuffle(cities);
+
+
+	//remember we continue to store all of these as City objects
+	var round1Cities = cities.slice(0,3);
+	var round2Cities = cities.slice(3,6);
+	var round3Cities = cities.slice(6,9);
+	var cityGroup = [round1Cities, round2Cities, round3Cities];
+
+	console.log(round1Cities);
+	console.log(round2Cities);
+	console.log(round3Cities);
+
+	var round1Answer = round1Cities[0];
+	var round2Answer = round2Cities[0];
+	var round3Answer = round3Cities[0];
+
+
+	//initialize some stuff in the global scope to access after initialization;
+	//var map;
+	var gMarkers = [];
+	var score = 0;
+
+	score += runARound(round1Cities);
+	score += runARound(round2Cities);
+	score += runARound(round3Cities);
+
+
 	//TODO display final score
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async
