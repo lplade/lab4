@@ -32,11 +32,11 @@
 	//Fisher-Yates shuffle
 	//https://www.frankmitchell.org/2015/01/fisher-yates/
 	function shuffle (array) {
-		var i = 0;
+		//var i = 0;
 		var j = 0;
 		var temp = null;
 
-		for (i = array.length - 1; i > 0; i -= 1) {
+		for (var i = array.length - 1; i > 0; i -= 1) {
 			j = Math.floor(Math.random() * (i + 1));
 			temp = array[i];
 			array[i] = array[j];
@@ -66,16 +66,18 @@
 		var map = new google.maps.Map(mapDiv, mapOptions);
 
 		//set up the markers with eventlisteners
-		for (var mrk = 0; mrk < 9; mrk++) {
-			cities[mrk].marker = new google.maps.Marker({
+		for (var a = 0; a < cities.length; a++) {
+			cities[a].marker = new google.maps.Marker({
 				position: {
-					lat: cities[mrk].cityLat,
-					lng: cities[mrk].cityLon
+					lat: cities[a].cityLat,
+					lng: cities[a].cityLon
 				},
 				map: map
 			});
-			cities[mrk].marker.addListener("click", function () {
-				checkIfCorrect(cities[mrk].cityName, cities[0].cityName);
+			currentCity = cities[a].cityName;
+			correctCity = cities[a].answer;
+			cities[a].marker.addListener("click", function () {
+				checkIfCorrect(currentCity, correctCity);
 				//TODO make it wait for a click before proceeding
 				//TODO modify score tally
 				//TODO clear markers before continuing
@@ -85,7 +87,6 @@
 		}
 
 	function runARound(roundCities){
-
 
 
 		}
@@ -101,10 +102,10 @@
 			console.log("Checking if it\'s " + clickedCityName);
 			var outputArea = document.getElementById("feedback");
 			if (clickedCityName == correctCityName) {
-				outputArea.innerHTML = "Correct! You clicked Madison.";
+				outputArea.innerHTML = "Correct! You clicked " + correctCityName + ".";
 				return true;
 			} else {
-				outputArea.innerHTML = "Sorry! That is not Madison.";
+				outputArea.innerHTML = "Sorry! That is not " + correctCityName + ".";
 				return false;
 			} //TODO cancel the listener at this point?
 		}; //end closure
@@ -128,8 +129,24 @@
 	//randomize this array for replayability
 	shuffle(cities);
 
+	console.log(cities);
 
-	//remember we continue to store all of these as City objects
+	//assign a "correct" answer to each object in the array.
+	//Makes passing correct answer sets easier.
+	var tmpAnswerIdx = 0;
+	for (var a = 0; a < cities.length; a++) {
+		console.log("Keying " + cities[a].cityName + " to...");
+		//Apparently, using an operator as a loop condition actually modifies the original variable?
+		//for (var b = tmpAnswerIdx; b < (tmpAnswerIdx + 3); b++) {
+		for (var b = 0; b < 3; b++) {
+			console.log("..." + cities[tmpAnswerIdx].cityName);
+			cities[a].answer = cities[tmpAnswerIdx].cityName;
+		}
+		tmpAnswerIdx =+ 3;
+	}
+
+
+/*	//remember we continue to store all of these as City objects
 	var round1Cities = cities.slice(0,3);
 	var round2Cities = cities.slice(3,6);
 	var round3Cities = cities.slice(6,9);
@@ -141,7 +158,7 @@
 
 	var round1Answer = round1Cities[0];
 	var round2Answer = round2Cities[0];
-	var round3Answer = round3Cities[0];
+	var round3Answer = round3Cities[0];*/
 
 
 	//initialize some stuff in the global scope to access after initialization;
