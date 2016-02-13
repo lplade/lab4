@@ -31,7 +31,7 @@
 
 	//Fisher-Yates shuffle
 	//https://www.frankmitchell.org/2015/01/fisher-yates/
-	function shuffle (array) {
+	function shuffle(array) {
 		//var i = 0;
 		var j = 0;
 		var temp = null;
@@ -81,19 +81,17 @@
 				//TODO make it wait for a click before proceeding
 				//TODO modify score tally
 				//TODO clear markers before continuing
-
 			});
-
 		}
-
-	function runARound(roundCities){
-
-
-		}
+	}
+	function runARound(roundCities) {
+		//TODO show only the three markers for this round
+		//TODO catch listener for the click
+		//TODO increment score or not based on return of checkIfCorrect function
 	}
 
 
-	function checkIfCorrect(clickedCityName,correctCityName) {
+	function checkIfCorrect(clickedCityName, correctCityName) {
 		// THIS IS THE THING THAT WAS DRIVING ME CRAZY
 		// Need to build a "closure" around this function
 		// Otherwise, there is a bewildering scope error and the code evaluates on all markers before you even click
@@ -133,38 +131,35 @@
 
 	//assign a "correct" answer to each object in the array.
 	//Makes passing correct answer sets easier.
-	for (var realCityIdx = 0; realCityIdx < cities.length; realCityIdx+=3) {
+	for (var realCityIdx = 0; realCityIdx < cities.length; realCityIdx += 3) {
 		console.log("Answer = " + cities[realCityIdx].cityName);
-		for (var currCityIdx = realCityIdx; currCityIdx < realCityIdx +3; currCityIdx++) {
+		for (var currCityIdx = realCityIdx; currCityIdx < realCityIdx + 3; currCityIdx++) {
 			cities[currCityIdx].answer = cities[realCityIdx].cityName;
 			console.log("...associating with " + cities[currCityIdx].cityName);
 		}
 	}
 
+	//I guess we COULD keep iterating through the loop to run each round, but my
+	// brain is melting now
 
-/*	//remember we continue to store all of these as City objects
-	var round1Cities = cities.slice(0,3);
-	var round2Cities = cities.slice(3,6);
-	var round3Cities = cities.slice(6,9);
+	//remember we continue to store all of these as City objects
+	var round1Cities = cities.slice(0, 3);
+	var round2Cities = cities.slice(3, 6);
+	var round3Cities = cities.slice(6, 9);
 	var cityGroup = [round1Cities, round2Cities, round3Cities];
 
 	console.log(round1Cities);
 	console.log(round2Cities);
 	console.log(round3Cities);
 
-	var round1Answer = round1Cities[0];
-	var round2Answer = round2Cities[0];
-	var round3Answer = round3Cities[0];*/
-
-
 	//initialize some stuff in the global scope to access after initialization;
 	//var map;
 	var gMarkers = [];
 	var score = 0;
 
-	//score += runARound(round1Cities);
-	//score += runARound(round2Cities);
-	//score += runARound(round3Cities);
+	score += runARound(round1Cities);
+	score += runARound(round2Cities);
+	score += runARound(round3Cities);
 
 
 	//TODO display final score
