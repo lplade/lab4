@@ -1,0 +1,1 @@
+Add more levels to this game, for example 3 sets of cities. Display the first set of cities for the user to guess; then the second set; then the 3rd set. After the user has guessed all three, display their score out of 3.
